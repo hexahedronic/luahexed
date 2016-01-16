@@ -9,6 +9,7 @@ render.context = {
 
 local currentMaterial = ""
 local currentContext = 0
+local currentFrame = 0
 
 function render.setMaterial(path)
 	currentMaterial = path or ""
@@ -26,8 +27,22 @@ function render.getContext()
 	return currentContext
 end
 
+function render.setFrame(frame)
+	currentFrame = frame
+end
+
+function render.getFrame()
+	return currentFrame
+end
+
 function render.getSize()
 	return graphics.window:getFramebufferSize()
 end
+
+function render.shouldClose()
+	return graphics.window:shouldClose()
+end
+
+event.listen("shouldShutdown", render.shouldClose)
 
 return render

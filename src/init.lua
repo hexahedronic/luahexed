@@ -195,11 +195,16 @@ do
 	--	E.SRC_FOLDER = e.ROOT_FOLDER .. "src/"
 	--	E.DATA_FOLDER = e.ROOT_FOLDER .. "data/"
 
+	-- When VFS is done, move the loading below and only use require to load vfs
+	-- after vfs is loaded use vfs to load all other files after mounting paths
 		local loadGame 	= require("main_loop")
 		graphics 				= require("graphics_init")
 
 		event						= require("event")
 		render					= require("render")
+		util						= require("util")
+
+		--util.printTable(graphics.glc)
 
 		popLoaders(n)
 
