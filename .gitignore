@@ -1,3 +1,5 @@
 *.zip
 bin/glfw3.dll
 bin/vcruntime140.dll
+bin/lua51.dll
+bin/luajit.exe
