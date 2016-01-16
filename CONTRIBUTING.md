@@ -1,7 +1,7 @@
 ## How to contribute
 
 If you're a member of the Hexahedronic organization, you have write access already.
-Otherwise, send us a pull request. A developer will review it and decide to pull it or not.
+Otherwise, send us a pull request. A developer will review it and decide whether to pull it or not.
 
 ## Guidelines
 
