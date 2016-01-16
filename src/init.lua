@@ -4,7 +4,7 @@ io.write("[CORE] init\n")
 local startTime = os.clock()
 
 if not require("ffi") then
-	
+
 	error("FFI module not found! luahexed requires FFI to run.")
 
 end
@@ -14,7 +14,7 @@ hexed = hexed or {}
 do
 
 	if jit.os ~= "Windows" then
-		
+
 		package.cpath = "./?.so"
 		package.path = "./?.lua"
 
@@ -167,7 +167,7 @@ do
 	local function popLoaders(n)
 
 		for i = 1, (n or 1) do
-			
+
 			table.remove(package.loaders)
 
 		end
@@ -175,9 +175,13 @@ do
 	end
 
 	do
-		
-		makeLoader(function(name) name = name:gsub("%.", "/") return loadfile("../src/includes/modules/" .. name .. ".lua") end)
-		makeLoader(function(name) name = name:gsub("%.", "/") return loadfile("../src/includes/modules/" .. name .. "/init.lua") end)
+		local LIB_DIR = "../src/libraries/"
+		makeLoader(function(name) name = name:gsub("%.", "/") return loadfile(LIB_DIR .. name .. ".lua") end)
+		makeLoader(function(name) name = name:gsub("%.", "/") return loadfile(LIB_DIR .. name .. "/init.lua") end)
+
+    local LIB_MOD = "../src/modules/"
+		makeLoader(function(name) name = name:gsub("%.", "/") return loadfile(LIB_MOD .. name .. ".lua") end)
+		makeLoader(function(name) name = name:gsub("%.", "/") return loadfile(LIB_MOD .. name .. "/init.lua") end)
 
 	--	ill set this up eventually
 	--	local fs = require("fs")
