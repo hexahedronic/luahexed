@@ -21,7 +21,7 @@ exit /b 1
 
 :NOBIN
 
-echo A bin folder was not found.
+echo A bin folder with extracted binaries was not found.
 echo Please download and extract the binaries from:
 echo http://github.com/Hexahedronic/luahexed/releases
 pause >nul
