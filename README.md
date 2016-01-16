@@ -24,6 +24,7 @@ See [CONTRIBUTING](CONTRIBUTING.md) when we write it.
 ### Hexahedronic
 
   **coc:** Callum Slaney (notq2f2@gmail.com)
+
   **coc:** Ghosty (fill your email pls ghosty)
 
 ## License
