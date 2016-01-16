@@ -35,6 +35,8 @@ See [CONTRIBUTING](CONTRIBUTING.md).
   **Developer:** Callum Slaney (notq2f2@gmail.com)
 
   **Developer:** Ghosty (andrew@austins.eu)
+  
+  **Developer:** Stepan Fedotov (admin@futuretechs.eu)
 
 ## License
 
