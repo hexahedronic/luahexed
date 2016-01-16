@@ -1,6 +1,7 @@
-function update(frame)
+function update(frame, frametime)
 	render.setContext(render.context.context_unknown)
 	render.setFrame(frame)
+	render.setFrameTime(frametime)
 
 	event.call("update")
 
@@ -31,15 +32,24 @@ function update(frame)
 	end
 
 	event.call("postRender")
+
+	graphics.window:swapBuffers()
+	graphics.lq_glfw.pollEvents()
 end
 
 function main()
 	local okay, err = true, ""
 	local frame = 0
+	local lastframe = 0
 
 	repeat
+		local time = graphics.lq_glfw.getTime()
+		local frametime = time - lastframe
+
 		frame = frame + 1
-		okay, err = pcall(update, frame)
+		lastframe = time
+
+		okay, err = pcall(update, frame, frametime)
 
 		if not okay then
 			print("error in update:" .. err)

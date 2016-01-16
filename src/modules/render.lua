@@ -10,6 +10,7 @@ render.context = {
 local currentMaterial = ""
 local currentContext = 0
 local currentFrame = 0
+local currentFrameTime = 0
 
 function render.setMaterial(path)
 	currentMaterial = path or ""
@@ -20,7 +21,7 @@ function render.getMaterial()
 end
 
 function render.setContext(context)
-	currentContext = context or ""
+	currentContext = context or 0
 end
 
 function render.getContext()
@@ -33,6 +34,18 @@ end
 
 function render.getFrame()
 	return currentFrame
+end
+
+function render.setFrameTime(frametime)
+	currentFrameTime = frametime
+end
+
+function render.getFrameTime()
+	return currentFrameTime
+end
+
+function render.getFPS()
+	return 1 / render.getFrameTime()
 end
 
 function render.getSize()

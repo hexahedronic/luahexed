@@ -204,7 +204,60 @@ do
 		render					= require("render")
 		util						= require("util")
 
-		--util.printTable(graphics.glc)
+		ffi							= require("ffi")
+
+		local CubeVerticies = {}
+		CubeVerticies.v = ffi.new("const float[8][3]", {
+			{0,0,1}, {0,0,0}, {0,1,0}, {0,1,1},
+			{1,0,1}, {1,0,0}, {1,1,0}, {1,1,1}
+		})
+
+		CubeVerticies.n = ffi.new("const float[6][3]", {
+			{-1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, {1.0, 0.0, 0.0},
+			{0.0, -1.0, 0.0}, {0.0, 0.0, -1.0}, {0.0, 0.0, 1.0}
+		})
+
+		CubeVerticies.f = ffi.new("const float[6][4]", {
+			{0, 1, 2, 3}, {3, 2, 6, 7}, {7, 6, 5, 4},
+			{4, 5, 1, 0}, {5, 6, 2, 1}, {7, 4, 0, 3}
+		})
+
+		graphics.gl.glEnable(graphics.glc.GL_DEPTH_TEST);
+
+		local w,h = render.getSize()
+
+		graphics.glu.gluPerspective(60, w/h, 0.01, 1000)
+
+		graphics.gl.glMatrixMode(graphics.glc.GL_PROJECTION)
+		graphics.gl.glMatrixMode(graphics.glc.GL_MODELVIEW)
+		graphics.glu.gluLookAt(0,0,5,
+			0,0,0,
+			0,1,0)
+
+		local rotx, roty, rotz = 1/math.sqrt(2), 1/math.sqrt(2), 0
+		local boxx, boxy, boxz = -0.5,-0.5,2
+
+		event.listen("render3D", "test", function()
+
+			print(render.getFPS())
+
+			graphics.gl.glClear(bit.bor(graphics.glc.GL_COLOR_BUFFER_BIT, graphics.glc.GL_DEPTH_BUFFER_BIT))
+
+			graphics.gl.glPushMatrix()
+			graphics.gl.glColor3d(1,1,1)
+			graphics.gl.glTranslated(boxx, boxy, boxz)
+			graphics.gl.glRotated(graphics.lq_glfw.getTime()*10, rotx, roty, rotz)
+			for i=0,5 do
+				graphics.gl.glBegin(graphics.glc.GL_QUADS)
+				graphics.gl.glNormal3fv(CubeVerticies.n[i])
+				for j=0,3 do
+					graphics.gl.glVertex3fv(CubeVerticies.v[CubeVerticies.f[i][j]])
+				end
+				graphics.gl.glEnd()
+			end
+			graphics.gl.glPopMatrix()
+
+		end)
 
 		popLoaders(n)
 
