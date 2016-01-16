@@ -1,11 +1,12 @@
 function update(frame, frametime)
-	render.setContext(render.context.context_unknown)
 	render.setFrame(frame)
 	render.setFrameTime(frametime)
 
 	event.call("update")
-
 	event.call("preRender")
+
+	render.setContext(render.context.context_unknown)
+	graphics.gl.glClear(bit.bor(graphics.glc.GL_COLOR_BUFFER_BIT, graphics.glc.GL_DEPTH_BUFFER_BIT))
 
 	do
 		render.setContext(render.context.context_3d)

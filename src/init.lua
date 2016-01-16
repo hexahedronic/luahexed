@@ -1,4 +1,3 @@
-
 io.write("[CORE] init\n")
 
 local startTime = os.clock()
@@ -197,7 +196,7 @@ do
 
 	-- When VFS is done, move the loading below and only use require to load vfs
 	-- after vfs is loaded use vfs to load all other files after mounting paths
-		local loadGame 	= require("main_loop")
+		local main 			= require("main_loop")
 		graphics 				= require("graphics_init")
 
 		event						= require("event")
@@ -208,8 +207,8 @@ do
 
 		local CubeVerticies = {}
 		CubeVerticies.v = ffi.new("const float[8][3]", {
-			{0,0,1}, {0,0,0}, {0,1,0}, {0,1,1},
-			{1,0,1}, {1,0,0}, {1,1,0}, {1,1,1}
+			{0,0,1}, {0,0,0}, {0,1,0}, {0,1,1}, -- Vector(0, 0, 1), Vector(0, 0, 0), Vector(0, 1, 0), Vector(0, 1, 1)
+			{1,0,1}, {1,0,0}, {1,1,0}, {1,1,1}  -- Vector(1, 0, 1), Vector(1, 0, 0), Vector(1, 1, 0), Vector(1, 1, 1)
 		})
 
 		CubeVerticies.n = ffi.new("const float[6][3]", {
@@ -222,8 +221,6 @@ do
 			{4, 5, 1, 0}, {5, 6, 2, 1}, {7, 4, 0, 3}
 		})
 
-		graphics.gl.glEnable(graphics.glc.GL_DEPTH_TEST);
-
 		local w,h = render.getSize()
 
 		graphics.glu.gluPerspective(60, w/h, 0.01, 1000)
@@ -234,34 +231,53 @@ do
 			0,0,0,
 			0,1,0)
 
-		local rotx, roty, rotz = 1/math.sqrt(2), 1/math.sqrt(2), 0
+		local rotx, roty, rotz = 0, 0, 100
 		local boxx, boxy, boxz = -0.5,-0.5,2
 
 		event.listen("render3D", "test", function()
-
 			print(render.getFPS())
 
-			graphics.gl.glClear(bit.bor(graphics.glc.GL_COLOR_BUFFER_BIT, graphics.glc.GL_DEPTH_BUFFER_BIT))
-
+			-- start translation matrix
 			graphics.gl.glPushMatrix()
-			graphics.gl.glColor3d(1,1,1)
-			graphics.gl.glTranslated(boxx, boxy, boxz)
-			graphics.gl.glRotated(graphics.lq_glfw.getTime()*10, rotx, roty, rotz)
-			for i=0,5 do
+
+			rotx, roty, rotz = math.random(1, 100), math.random(1, 100), math.random(1, 100)
+
+			-- this is like localtoworld, it moves the cube's origin
+			graphics.gl.glTranslated(boxx, boxy, boxz - graphics.lq_glfw.getTime())
+
+			-- rotation, rotates by first arg as degrees around the vertex x,y,z
+			graphics.gl.glRotated(graphics.lq_glfw.getTime()^2, rotx, roty, rotz)
+			for i = 0, 5 do -- zero indexed
+
+			-- set color as a set of 3 DOUBLES
+			-- its not 3d as in 'context', its 3double(precision floats)!
+				graphics.gl.glColor3d(1, 1 / i, 1 / i)
+
+				-- mode, we are drawing quads
 				graphics.gl.glBegin(graphics.glc.GL_QUADS)
+
+				-- glNormal3fv = normal as set of 3 float values (3fv)
+				-- sets quad normal vector as to tell what direction we drawing in
 				graphics.gl.glNormal3fv(CubeVerticies.n[i])
-				for j=0,3 do
+				for j = 0, 3 do -- zero indexed
+
+					-- glNormal3fv = normal as set of 3 float values (3fv)
+					-- face translation for this normal, gets what vertexts we want
+					-- based on which face we are on.
 					graphics.gl.glVertex3fv(CubeVerticies.v[CubeVerticies.f[i][j]])
 				end
+
+				-- end drawing quads
 				graphics.gl.glEnd()
 			end
-			graphics.gl.glPopMatrix()
 
+			-- end matrixing
+			graphics.gl.glPopMatrix()
 		end)
 
 		popLoaders(n)
 
-		loadGame()
+		main()
 		graphics.shutdown()
 
 	end
