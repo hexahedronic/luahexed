@@ -34,7 +34,7 @@ See [CONTRIBUTING](CONTRIBUTING.md).
 
   **Developer:** Callum Slaney (notq2f2@gmail.com)
 
-  **Developer:** Andrew Austin (ghosty.hexahedronic@gmial.com)
+  **Developer:** Andrew Austin (ghosty.hexahedronic@gmail.com)
   
   **Developer:** Stepan Fedotov (admin@futuretechs.eu)
 
