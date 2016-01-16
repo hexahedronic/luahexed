@@ -1,2 +1,2 @@
 # luahexed
-Experimental LuaJIT Game
+Experimental LuaJIT Game Engine
