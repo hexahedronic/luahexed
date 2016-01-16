@@ -7,7 +7,8 @@ Experimental LuaJIT Game Engine
 ## Installation
 
 Drag it somewhere and extract it.
-Really simple. Please do not contact us if it does not work for you.
+
+WARNING: You need the binaries to run this. Please download them from the [RELEASES]https://github.com/Hexahedronic/luahexed/releases tab.
 
 ## How to make games
 
