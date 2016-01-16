@@ -17,4 +17,6 @@ Members of the organization are also expected to follow these guidelines.
 
 ## What if my pull request is denied?
 
-Please don't complain. kthx.
+Does your code style bear any resemblance to ours? If not, please fix that.
+
+Troll pullreqs are obviously denied.
