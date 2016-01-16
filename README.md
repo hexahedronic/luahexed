@@ -23,8 +23,8 @@ See [CONTRIBUTING](CONTRIBUTING.md) when we write it.
 
 ### Hexahedronic
 
-  Callum Slaney (notq2f2@gmail.com)
-  Ghosty (fill your email pls ghosty)
+  **coc:** Callum Slaney (notq2f2@gmail.com)
+  **coc:** Ghosty (fill your email pls ghosty)
 
 ## License
 
