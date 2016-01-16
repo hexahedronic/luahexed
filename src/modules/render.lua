@@ -1,6 +1,6 @@
 local render = {}
 render.context = {
-	context_unknown = 0
+	context_unknown = 0,
 	context_3d			= 1,
 	context_2d			= 2,
 	context_3d2d		= 3,
