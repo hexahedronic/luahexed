@@ -175,13 +175,17 @@ do
 	end
 
 	do
+		local BASE_DIR = "../src/"
+		makeLoader(function(name) name = name:gsub("%.", "/") return loadfile(BASE_DIR .. name .. ".lua") end)
+		makeLoader(function(name) name = name:gsub("%.", "/") return loadfile(BASE_DIR .. name .. "/init.lua") end)
+
 		local LIB_DIR = "../src/libraries/"
 		makeLoader(function(name) name = name:gsub("%.", "/") return loadfile(LIB_DIR .. name .. ".lua") end)
 		makeLoader(function(name) name = name:gsub("%.", "/") return loadfile(LIB_DIR .. name .. "/init.lua") end)
 
-    local LIB_MOD = "../src/modules/"
-		makeLoader(function(name) name = name:gsub("%.", "/") return loadfile(LIB_MOD .. name .. ".lua") end)
-		makeLoader(function(name) name = name:gsub("%.", "/") return loadfile(LIB_MOD .. name .. "/init.lua") end)
+		local MOD_DIR = "../src/modules/"
+		makeLoader(function(name) name = name:gsub("%.", "/") return loadfile(MOD_DIR .. name .. ".lua") end)
+		makeLoader(function(name) name = name:gsub("%.", "/") return loadfile(MOD_DIR .. name .. "/init.lua") end)
 
 	--	ill set this up eventually
 	--	local fs = require("fs")
@@ -191,7 +195,7 @@ do
 	--	E.SRC_FOLDER = e.ROOT_FOLDER .. "src/"
 	--	E.DATA_FOLDER = e.ROOT_FOLDER .. "data/"
 
-		require("glfw")
+		graphics = require("graphics_init")
 
 		popLoaders(n)
 
