@@ -2,7 +2,7 @@
 Experimental LuaJIT Game Engine
 
 #### WARNING: THIS IS NOWHERE NEAR COMPLETE.
-*We will complete anything below when the engine is actually perceivably working.*
+**We will complete anything below when the engine is actually perceivably working.**
 
 ## Installation
 
