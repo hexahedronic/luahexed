@@ -24,26 +24,26 @@ end
 
 do
 
-	local path = debug.getinfo(1).source
+	local current_dir = io.popen("cd")
 
-	if path:sub(1, 1) == "@" then
+	local dir = current_dir:read("*l")
+	dir = dir:gsub("\\","/")
 
-		path = path:gsub("\\", "/")
-		local dir = path:match("@(.+/)src/init.lua")
+	if not dir:match("/$") then dir = dir .. "/" end
 
-		local ffi = require("ffi")
+	current_dir:close()
 
-		if jit.os == "Windows" then
+	local ffi = require("ffi")
 
-			ffi.cdef("int SetCurrentDirectoryA(const char *);")
-			ffi.C.SetCurrentDirectoryA(dir .. "bin/")
+	if jit.os == "Windows" then
 
-		else
+		ffi.cdef("int SetCurrentDirectoryA(const char *);")
+		ffi.C.SetCurrentDirectoryA(dir .. "bin/")
 
-			ffi.cdef("int chdir(const char *);")
-			ffi.C.chdir(dir .. "bin/")
+	else
 
-		end
+		ffi.cdef("int chdir(const char *);")
+		ffi.C.chdir(dir .. "bin/")
 
 	end
 
@@ -156,7 +156,7 @@ do -- 5.2 compat
 
 end
 
-if false then -- NOTE: This is placeholder code from something else
+do
 
 	local function makeLoader(f)
 
@@ -179,42 +179,18 @@ if false then -- NOTE: This is placeholder code from something else
 		makeLoader(function(name) name = name:gsub("%.", "/") return loadfile("../src/includes/modules/" .. name .. ".lua") end)
 		makeLoader(function(name) name = name:gsub("%.", "/") return loadfile("../src/includes/modules/" .. name .. "/init.lua") end)
 
-		local fs = require("fs")
+	--	ill set this up eventually
+	--	local fs = require("fs")
 
-		E.BIN_FOLDER = fs.getcd():gsub("\\", "/") .. "/"
-		E.ROOT_FOLDER = e.BIN_FOLDER:match("(.+/)(.-/)")
-		E.SRC_FOLDER = e.ROOT_FOLDER .. "src/"
-		E.DATA_FOLDER = e.ROOT_FOLDER .. "data/"
+	--	E.BIN_FOLDER = fs.getcd():gsub("\\", "/") .. "/"
+	--	E.ROOT_FOLDER = e.BIN_FOLDER:match("(.+/)(.-/)")
+	--	E.SRC_FOLDER = e.ROOT_FOLDER .. "src/"
+	--	E.DATA_FOLDER = e.ROOT_FOLDER .. "data/"
 
-		fs.createdir(E.DATA_FOLDER)
-
-		function check() end
-		function include() end
-
-		local function S(str) return E.SRC_FOLDER .. "includes/" .. str end
-
-		dofile(S"extensions/globals.lua")
-		dofile(S"extensions/debug.lua")
-		dofile(S"extensions/string.lua")
-		dofile(S"extensions/table.lua")
-		lpk.prototype = dofile(S"libraries/prototype/prototype.lua")
-		dofile(S"libraries/prototype/get_is_set.lua") 
-		dofile(S"libraries/prototype/base_object.lua")
-		dofile(S"libraries/prototype/null.lua")
-		lpk.util = dofile(S"libraries/utility/util.lua")
-
-		lpk.file = dofile(S"libraries/filesystem/filesystem.lua")
-		dofile(S"libraries/filesystem/path_utilities.lua")
+		require("glfw")
 
 		popLoaders(n)
 
 	end
 
 end
-
--- do test
-
-glfw = require"glfw"
-
--- make test
--- require("glfwtests.lua")
