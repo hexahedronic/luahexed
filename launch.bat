@@ -6,9 +6,9 @@ title LuaHexed
 
 "bin/luajit.exe" "src/init.lua"
 
-if %ERRORLEVEL% NEQ 1 goto FAILURE
+if %ERRORLEVEL% NEQ 0 goto FAILURE
 
-exit
+exit /b 1
 
 :FAILURE
 
