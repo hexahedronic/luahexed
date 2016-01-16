@@ -223,13 +223,15 @@ do
 
 		local w,h = render.getSize()
 
-		graphics.glu.gluPerspective(60, w/h, 0.01, 1000)
+		graphics.glu.gluPerspective(60, w/h, 0.01, 1000) -- fov, aspect, nearclip, farclip
 
-		graphics.gl.glMatrixMode(graphics.glc.GL_PROJECTION)
-		graphics.gl.glMatrixMode(graphics.glc.GL_MODELVIEW)
-		graphics.glu.gluLookAt(0,0,5,
-			0,0,0,
-			0,1,0)
+		--graphics.gl.glMatrixMode(graphics.glc.GL_PROJECTION) -- different matrixes, not quite sure
+		-- setting it twice does nothing, unless i am genuinely retarded?
+		graphics.gl.glMatrixMode(graphics.glc.GL_MODELVIEW) -- different matrixes, not quite sure
+
+		graphics.glu.gluLookAt(0,0,5, -- eye offset
+			0,0,0, -- origin
+			0,1,0) -- up vector, like in gmod
 
 		local rotx, roty, rotz = 0, 0, 100
 		local boxx, boxy, boxz = -0.5,-0.5,2
@@ -239,8 +241,6 @@ do
 
 			-- start translation matrix
 			graphics.gl.glPushMatrix()
-
-			rotx, roty, rotz = math.random(1, 100), math.random(1, 100), math.random(1, 100)
 
 			-- this is like localtoworld, it moves the cube's origin
 			graphics.gl.glTranslated(boxx, boxy, boxz - graphics.lq_glfw.getTime())
