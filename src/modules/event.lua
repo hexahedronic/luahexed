@@ -1,4 +1,4 @@
-event = {}
+local event = {}
 local listeners = {}
 
 function event.listen(eventName, identifier, callback)
@@ -29,3 +29,5 @@ end
 function event.getTable()
 	return listeners
 end
+
+return event

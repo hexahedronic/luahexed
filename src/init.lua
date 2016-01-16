@@ -195,9 +195,16 @@ do
 	--	E.SRC_FOLDER = e.ROOT_FOLDER .. "src/"
 	--	E.DATA_FOLDER = e.ROOT_FOLDER .. "data/"
 
-		graphics = require("graphics_init")
+		local loadGame 	= require("main_loop")
+		graphics 				= require("graphics_init")
+
+		event						= require("event")
+		render					= require("render")
 
 		popLoaders(n)
+
+		loadGame()
+		graphics.shutdown()
 
 	end
 

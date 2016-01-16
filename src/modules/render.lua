@@ -1,4 +1,4 @@
-render = {}
+local render = {}
 render.context = {
 	context_unknown = 0
 	context_3d			= 1,
@@ -25,3 +25,9 @@ end
 function render.getContext()
 	return currentContext
 end
+
+function render.getSize()
+	return graphics.window:getFramebufferSize()
+end
+
+return render
