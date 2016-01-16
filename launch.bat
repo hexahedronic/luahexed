@@ -5,7 +5,7 @@ REM OKAY?
 
 title LuaHexed
 
-if not exist bin goto NOBIN
+if not exist "bin/luajit.exe" goto NOBIN
 
 "bin/luajit.exe" "src/init.lua"
 
