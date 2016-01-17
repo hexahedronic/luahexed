@@ -187,7 +187,12 @@ function string.trim(s, char)
 	return s:match("^" .. char .. "*(.-)" .. char .. "*$") or s
 end
 
-function string.trimRight(s, char)
-	if char then char = char:patternSafe() else char = "%s" end
+function string.trimright(s, char)
+	char = char or "%s"
 	return s:match("^(.-)" .. char .. "*$") or s
+end
+
+function string.trimleft(s, char)
+	char = char or "%s"
+	return s:match("^" .. char .. "*(.+)") or s
 end
