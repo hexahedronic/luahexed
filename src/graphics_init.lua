@@ -1,5 +1,5 @@
 local graphics = {}
-graphics.lq_glfw = require("glfw")
+graphics.lq_glfw = require("libraries.glfw")
 
 graphics.lq_glfw.init()
 

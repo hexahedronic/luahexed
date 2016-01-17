@@ -173,18 +173,10 @@ do
 
 	end
 
+	local main
 	do
-		local BASE_DIR = "../src/"
-		makeLoader(function(name) name = name:gsub("%.", "/") return loadfile(BASE_DIR .. name .. ".lua") end)
-		makeLoader(function(name) name = name:gsub("%.", "/") return loadfile(BASE_DIR .. name .. "/init.lua") end)
-
-		local LIB_DIR = "../src/libraries/"
-		makeLoader(function(name) name = name:gsub("%.", "/") return loadfile(LIB_DIR .. name .. ".lua") end)
-		makeLoader(function(name) name = name:gsub("%.", "/") return loadfile(LIB_DIR .. name .. "/init.lua") end)
-
-		local MOD_DIR = "../src/modules/"
-		makeLoader(function(name) name = name:gsub("%.", "/") return loadfile(MOD_DIR .. name .. ".lua") end)
-		makeLoader(function(name) name = name:gsub("%.", "/") return loadfile(MOD_DIR .. name .. "/init.lua") end)
+		makeLoader(function(name) name = name:gsub("%.", "/") return loadfile("../src/" .. name .. ".lua") end)
+		makeLoader(function(name) name = name:gsub("%.", "/") return loadfile("../src/" .. name .. "/init.lua") end)
 
 	--	ill set this up eventually
 	--	local fs = require("fs")
@@ -196,30 +188,42 @@ do
 
 	-- When VFS is done, move the loading below and only use require to load vfs
 	-- after vfs is loaded use vfs to load all other files after mounting paths
-		local main 			= require("main_loop")
-		graphics 				= require("graphics_init")
-
-		event						= require("event")
-		render					= require("render")
-		util						= require("util")
-
 		ffi							= require("ffi")
 
+		graphics 				= require("graphics_init")
+		main 						= require("main_loop")
+
+		util						= require("modules.util")
+
+	require("extensions.global")
+	require("extensions.math")
+	require("extensions.string")
+
+		object					= require("modules.object")
+
+		event						= require("modules.event")
+		render					= require("modules.render")
+
+		vec3d, vec2d		= require("modules.vector")
+
+		local vec = vec3d(1, 3, 7)
+		print(vec, vec:getf(), vec.x)
+
 		local CubeVerticies = {}
-		CubeVerticies.v = ffi.new("const float[8][3]", {
+		CubeVerticies.v = util.fArray{
 			{0,0,1}, {0,0,0}, {0,1,0}, {0,1,1}, -- Vector(0, 0, 1), Vector(0, 0, 0), Vector(0, 1, 0), Vector(0, 1, 1)
 			{1,0,1}, {1,0,0}, {1,1,0}, {1,1,1}  -- Vector(1, 0, 1), Vector(1, 0, 0), Vector(1, 1, 0), Vector(1, 1, 1)
-		})
+		}
 
-		CubeVerticies.n = ffi.new("const float[6][3]", {
+		CubeVerticies.n = util.fArray{
 			{-1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, {1.0, 0.0, 0.0},
 			{0.0, -1.0, 0.0}, {0.0, 0.0, -1.0}, {0.0, 0.0, 1.0}
-		})
+		}
 
-		CubeVerticies.f = ffi.new("const float[6][4]", {
+		CubeVerticies.f = util.fArray{
 			{0, 1, 2, 3}, {3, 2, 6, 7}, {7, 6, 5, 4},
 			{4, 5, 1, 0}, {5, 6, 2, 1}, {7, 4, 0, 3}
-		})
+		}
 
 		local w,h = render.getSize()
 
@@ -237,13 +241,42 @@ do
 		local boxx, boxy, boxz = -0.5,-0.5,2
 
 		event.listen("render3D", "test", function()
-			print(render.getFPS())
-
-			-- start translation matrix
-			graphics.gl.glPushMatrix()
+			--print(render.getFPS())
+			local time = render.curTime()
 
 			-- this is like localtoworld, it moves the cube's origin
-			graphics.gl.glTranslated(boxx, boxy, boxz - graphics.lq_glfw.getTime())
+			graphics.gl.glTranslated(boxx, boxy, boxz - time)
+
+			-- rotation, rotates by first arg as degrees around the vertex x,y,z
+			graphics.gl.glRotated(time^2, rotx, roty, rotz)
+			for i = 0, 5 do -- zero indexed
+
+			-- set color as a set of 3 DOUBLES
+			-- its not 3d as in 'context', its 3double(precision floats)!
+				graphics.gl.glColor3d(1, 1 / i, 1 / i)
+
+				-- mode, we are drawing quads
+				graphics.gl.glBegin(graphics.glc.GL_QUADS)
+
+				-- glNormal3fv = normal as set of 3 float values (3fv)
+				-- sets quad normal vector as to tell what direction we drawing in
+				graphics.gl.glNormal3fv(CubeVerticies.n[i])
+
+				-- supply 4 vertexs for a cube
+				for j = 0, 3 do -- zero indexed
+
+					-- glNormal3fv = normal as set of 3 float values (3fv)
+					-- face translation for this normal, gets what vertexts we want
+					-- based on which face we are on.
+					graphics.gl.glVertex3fv(CubeVerticies.v[CubeVerticies.f[i][j]])
+				end
+
+				-- end drawing quads
+				graphics.gl.glEnd()
+			end
+
+			-- this is like localtoworld, it moves the cube's origin
+			graphics.gl.glTranslated(boxx + 10, boxy, boxz - graphics.lq_glfw.getTime())
 
 			-- rotation, rotates by first arg as degrees around the vertex x,y,z
 			graphics.gl.glRotated(graphics.lq_glfw.getTime()^2, rotx, roty, rotz)
@@ -270,14 +303,14 @@ do
 				-- end drawing quads
 				graphics.gl.glEnd()
 			end
-
-			-- end matrixing
-			graphics.gl.glPopMatrix()
 		end)
 
 		popLoaders(n)
 
-		main()
+		event.call("init")
+			main()
+		event.call("shutdown")
+
 		graphics.shutdown()
 
 	end
