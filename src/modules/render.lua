@@ -66,11 +66,25 @@ function render.drawQuad(vec1, vec2, vec3, vec4, norm)
 	assertType(vec4, "vec3d")
 	assertType(norm, "vec3d")
 
-	local v1 = vec1:getf()
-	local v2 = vec2:getf()
-	local v3 = vec3:getf()
-	local v4 = vec4:getf()
+	assert(render.getContext() == render.context.context_3d)
 
+	local v = {}
+	v[0] = vec1:getf()
+	v[1] = vec2:getf()
+	v[2] = vec3:getf()
+	v[3] = vec4:getf()
+
+	local n = norm:getf()
+
+	graphics.gl.glBegin(graphics.glc.GL_QUADS)
+
+	graphics.gl.glNormal3fv(n)
+	for i = 0, 3 do
+		local vertex = v[i]
+		graphics.gl.glVertex3fv(vertex)
+	end
+
+	graphics.gl.glEnd()
 
 end
 

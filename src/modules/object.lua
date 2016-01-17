@@ -13,6 +13,10 @@ function object.register(name, meta, baseclass)
 	end
 end
 
+function object.registerBase(name, meta)
+	metatables[name] = meta
+end
+
 function object.new(name, ...)
 	local obj = {}
 	setmetatable(obj, {__index = metatables[name]})

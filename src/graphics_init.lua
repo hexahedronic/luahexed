@@ -14,7 +14,11 @@ function graphics.shutdown()
 end
 
 graphics.gl.glClearColor(0, 0, 0.4, 0)
+
 graphics.gl.glEnable(graphics.glc.GL_DEPTH_TEST)
 graphics.gl.glDepthFunc(graphics.glc.GL_LESS)
+
+graphics.gl.glEnable(graphics.glc.GL_CULL_FACE)
+graphics.gl.glFrontFace(graphics.glc.GL_CW)
 
 return graphics

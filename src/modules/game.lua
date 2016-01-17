@@ -1,3 +1,0 @@
-local game = {}
-
-return game
