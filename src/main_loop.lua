@@ -8,6 +8,8 @@ function update(frame, frametime)
 	render.setContext(render.context.context_unknown)
 	graphics.gl.glClear(bit.bor(graphics.glc.GL_COLOR_BUFFER_BIT, graphics.glc.GL_DEPTH_BUFFER_BIT))
 
+	graphics.gl.glPushMatrix()
+
 	do
 		render.setContext(render.context.context_3d)
 
@@ -15,6 +17,10 @@ function update(frame, frametime)
 		event.call("render3D")
 		event.call("postRender3D")
 	end
+
+	graphics.gl.glPopMatrix()
+
+	graphics.gl.glPushMatrix()
 
 	do
 		render.setContext(render.context.context_3d2d)
@@ -24,6 +30,10 @@ function update(frame, frametime)
 		event.call("postRender3D2D")
 	end
 
+	graphics.gl.glPopMatrix()
+
+	graphics.gl.glPushMatrix()
+
 	do
 		render.setContext(render.context.context_2d)
 
@@ -31,6 +41,8 @@ function update(frame, frametime)
 		event.call("render2D")
 		event.call("postRender2D")
 	end
+
+	graphics.gl.glPopMatrix()
 
 	event.call("postRender")
 
