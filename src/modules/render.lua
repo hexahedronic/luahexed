@@ -48,6 +48,15 @@ function render.getFPS()
 	return 1 / render.getFrameTime()
 end
 
+function render.curTime()
+	return graphics.lq_glfw.getTime()
+end
+
+-- actual rendering
+function render.drawQuad(vec1, vec2, vec3, vec4)
+	local v1 = vec1:getf()
+end
+
 function render.getSize()
 	return graphics.window:getFramebufferSize()
 end
