@@ -2,7 +2,7 @@ local meta = getmetatable("")
 local string = string
 
 function meta:__index(i)
-	if type(i) == "number" then	
+	if type(i) == "number" then
 		return self:sub(i, i)
 	elseif type(i) == "string" then
 		return string[i]
