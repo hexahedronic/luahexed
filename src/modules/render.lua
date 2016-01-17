@@ -13,6 +13,8 @@ local currentFrame = 0
 local currentFrameTime = 0
 
 function render.setMaterial(path)
+	assertType(path, "string")
+
 	currentMaterial = path or ""
 end
 
@@ -21,7 +23,9 @@ function render.getMaterial()
 end
 
 function render.setContext(context)
-	currentContext = context or 0
+	assertType(context, "number")
+
+	currentContext = context
 end
 
 function render.getContext()
@@ -29,6 +33,8 @@ function render.getContext()
 end
 
 function render.setFrame(frame)
+	assertType(frame, "number")
+
 	currentFrame = frame
 end
 
@@ -53,8 +59,19 @@ function render.curTime()
 end
 
 -- actual rendering
-function render.drawQuad(vec1, vec2, vec3, vec4)
+function render.drawQuad(vec1, vec2, vec3, vec4, norm)
+	assertType(vec1, "vec3d")
+	assertType(vec2, "vec3d")
+	assertType(vec3, "vec3d")
+	assertType(vec4, "vec3d")
+	assertType(norm, "vec3d")
+
 	local v1 = vec1:getf()
+	local v2 = vec2:getf()
+	local v3 = vec3:getf()
+	local v4 = vec4:getf()
+
+
 end
 
 function render.getSize()
@@ -65,6 +82,6 @@ function render.shouldClose()
 	return graphics.window:shouldClose()
 end
 
-event.listen("shouldShutdown", render.shouldClose)
+event.listen("shouldShutdown", "windowClose", render.shouldClose)
 
 return render

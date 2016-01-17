@@ -67,7 +67,11 @@ function main()
 		if not okay then
 			print("error in update:" .. err)
 		end
-	until not okay or event.call("shouldShutdown")
+
+		if event.call("shouldShutdown") then
+			okay = false
+		end
+	until not okay
 end
 
 return main
