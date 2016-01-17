@@ -76,14 +76,14 @@ end
 function typex(i)
 
 	if hasindex(i) then
-		
+
 		local t = i.__type
 
 		if isfunction(t) then t = t() end
 
 		return t or type(i)
 
-	end 
+	end
 
 	return type(i)
 
@@ -111,7 +111,7 @@ isuserdata = v("userdata")
 
 isany = function(a, ...)
 	for i = 1, select("#", ...) do
-		
+
 		local v = select(i, ...)
 
 		if type(a) == v then return true end

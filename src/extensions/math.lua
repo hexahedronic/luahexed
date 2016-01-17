@@ -21,7 +21,7 @@ function math.intToBin(int)
 
 end
 
-function math.clamp(a, b, c) 
+function math.clamp(a, b, c)
 	-- if you can optimize this i will <3 you 4ever :D -ghosty
 	return math.min(math.min(math.max(math.min(b, c), a), math.max(c, b)), math.max(math.min(b, c), a))
 end
@@ -50,11 +50,11 @@ end
 function math.AngleDifference(a, b)
 
 	local diff = math.normalizeAngle(a - b)
-	
+
 	if diff < 180 then
 		return diff
 	end
-	
+
 	return diff - 360
 
 end
