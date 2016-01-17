@@ -23,4 +23,12 @@ function util.printTable(tbl)
 	printTableInternal(tbl, 0, false)
 end
 
+function util.fArray(tbl)
+	if not util.isTable(tbl[1]) then
+		return ffi.new("float[" .. #tbl .. "]", tbl)
+	end
+
+	return ffi.new("float[" .. #tbl .. "][" .. #tbl[1] .. "]", tbl)
+end
+
 return util
