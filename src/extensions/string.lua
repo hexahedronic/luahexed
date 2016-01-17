@@ -32,12 +32,12 @@ function meta:__call(i, ...)
 end
 
 function meta:__add(i)
-	if tonumber(self) and tonumber(i) then return tonumber(self) + tonumber(i)
+	if tonumber(self) and tonumber(i) then return tonumber(self) + tonumber(i) end
 	return self .. i
 end
 
 function meta:__sub(i)
-	if tonumber(self) and tonumber(i) then return tonumber(self) - tonumber(i)
+	if tonumber(self) and tonumber(i) then return tonumber(self) - tonumber(i) end
 	return self:gsub(tostring(i):patternSafe(), "")
 end
 
