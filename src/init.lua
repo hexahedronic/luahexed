@@ -195,9 +195,9 @@ do
 
 		util						= require("modules.util")
 
-	require("extensions.global")
-	require("extensions.math")
-	require("extensions.string")
+		require("extensions.global")
+		require("extensions.math")
+		require("extensions.string")
 
 		object					= require("modules.object")
 
