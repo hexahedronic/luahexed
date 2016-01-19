@@ -151,5 +151,7 @@ do
 		event.call("shutdown")
 
 		graphics.shutdown()
+
+		if DEBUG then while true do end end
 	end
 end
