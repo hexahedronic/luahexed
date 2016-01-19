@@ -134,4 +134,4 @@ end
 
 object.register("vec2d", vec2d)
 
-return vec3d, vec2d
+return vec2d, vec3d, vec4d

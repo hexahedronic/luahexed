@@ -77,7 +77,6 @@ end
 
 scan(_G, _OLD_G)
 
-
 do -- 5.2 compat
 	local old_setmetatable = setmetatable
 
@@ -124,34 +123,37 @@ do
 
 		-- When VFS is done, move the loading below and only use require to load vfs
 		-- after vfs is loaded use vfs to load all other files after mounting paths
-
-		ffi							= require("ffi")
-
-		graphics 				= require("graphics_init")
-		main 						= require("main_loop")
-
-		util						= require("modules.util")
-
-		require("extensions.global")
-		require("extensions.math")
-		require("extensions.string")
-
-		object					= require("modules.object")
-		event						= require("modules.event")
-
-		render					= require("modules.render")
-		input						= require("modules.input")
-
-		vec3d, vec2d		= require("modules.vector")
-
-		require("tests.graphicstest")
-
-		event.call("init")
-			main()
-		event.call("shutdown")
-
-		graphics.shutdown()
-
-		if DEBUG then while true do end end
 	end
 end
+
+do
+	local main 										= require("main_loop")
+
+	util													= require("modules.util")
+
+	require("extensions.global")
+	require("extensions.math")
+	require("extensions.string")
+
+	_G.object											= require("modules.object")
+	_G.event											= require("modules.event")
+
+	_G.render											= require("modules.render")
+	_G.input											= require("modules.input")
+
+	_G.vec2d, _G.vec3d, _G.vec4d 	= require("modules.vector")
+
+	_G.gl													= require("libraries.opengl")
+	_G.glfw												= require("libraries.glfw")
+
+	_G.window 										= require("graphics.window")
+
+	--require("tests.graphicstest")
+
+	glfw.glfwInit()
+	event.call("init")
+		main()
+	event.call("shutdown")
+	glfw.glfwTerminate()
+end
+
