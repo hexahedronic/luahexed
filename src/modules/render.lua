@@ -14,7 +14,7 @@ function render.drawQuad(vec1, vec2, vec3, vec4, norm)
 	v[3] = vec4:getf()
 
 	local n = norm:getf()
-	gl.glBegin(graphics.glc.GL_QUADS)
+	gl.glBegin(gl.QUADS)
 	gl.glNormal3fv(n)
 	for i = 0, 3 do
 		local vertex = v[i]
