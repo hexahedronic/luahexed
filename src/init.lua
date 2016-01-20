@@ -142,6 +142,7 @@ do
 	_G.input											= require("modules.input")
 
 	_G.vec2d, _G.vec3d, _G.vec4d 	= require("modules.vector")
+	_G.mesh												= require("modules.vertexmesh")
 
 	_G.gl													= require("libraries.opengl")
 	_G.glfw												= require("libraries.glfw")
