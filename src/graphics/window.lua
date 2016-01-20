@@ -62,7 +62,7 @@ function window:render(dtTime)
 		self:close()
 	else
 		self:clear()
-			event.call("render", self)
+			event.call("render", self, dtTime)
 		self:pollEvents()
 		self:swapBuffers()
 
@@ -79,7 +79,7 @@ end
 
 function window:getFPS()
 	if self.dtTime <= 0 then return 0 end
-	return 1 / self.dtTime
+	return math.floor(1 / self.dtTime)
 end
 
 function window:getContextVersionString()
