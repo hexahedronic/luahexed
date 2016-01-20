@@ -119,3 +119,39 @@ isany = function(a, ...)
 	end
 	return false
 end
+
+function isValid(o)
+
+	if not o then return false end
+	if not hasindex(o) then return false end
+	if o.isValid and o:isValid() then return true end
+
+	return false
+
+end
+
+include = vfs.include
+
+function loadextension(a)
+
+	if not a:match("%.lua$") then a = a .. ".lua" end
+
+	return include("extensions/" .. a:gsub("\\","/"))
+
+end
+
+function loadmodule(a)
+
+	if not a:match("%.lua$") then a = a .. ".lua" end
+
+	return include("modules/" .. a:gsub("\\","/"))
+
+end
+
+function loadlib(a)
+
+	if not a:match("%.lua$") then a = a .. ".lua" end
+
+	return include("libraries/" .. a:gsub("\\","/"))
+
+end

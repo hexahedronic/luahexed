@@ -113,42 +113,46 @@ do
 		makeLoader(function(name) name = name:gsub("%.", "/") return loadfile("../src/" .. name .. ".lua") end)
 		makeLoader(function(name) name = name:gsub("%.", "/") return loadfile("../src/" .. name .. "/init.lua") end)
 
-		--	ill set this up eventually
-		--	local fs = require("fs")
+	--	ill set this up eventually
+	--	looks like its starting to happen
+		local fs = require("modules.fs")
 
-		--	E.BIN_FOLDER = fs.getcd():gsub("\\", "/") .. "/"
-		--	E.ROOT_FOLDER = e.BIN_FOLDER:match("(.+/)(.-/)")
-		--	E.SRC_FOLDER = e.ROOT_FOLDER .. "src/"
-		--	E.DATA_FOLDER = e.ROOT_FOLDER .. "data/"
+		E.BIN_FOLDER = fs.getcd():gsub("\\", "/") .. "/"
+		E.ROOT_FOLDER = E.BIN_FOLDER:match("(.+/)(.-/)")
+		E.SRC_FOLDER = E.ROOT_FOLDER .. "src/"
+		E.DATA_FOLDER = E.ROOT_FOLDER .. "data/"
 
 		-- When VFS is done, move the loading below and only use require to load vfs
 		-- after vfs is loaded use vfs to load all other files after mounting paths
 	end
 end
 
+function assertType() end -- workaround
+object = require("modules.object") -- vfs requires object
+vfs = require("modules.vfs")
+require("extensions.global")
+
+loadextension("math")
+loadextension("string")
+
 do
-	local main 										= require("main_loop")
+	local main = include("main_loop.lua")
 
-	util													= require("modules.util")
+	util = loadmodule("util")
 
-	require("extensions.global")
-	require("extensions.math")
-	require("extensions.string")
+	event = loadmodule("event")
 
-	_G.object											= require("modules.object")
-	_G.event											= require("modules.event")
+	render = loadmodule("render")
+	input = loadmodule("input")
 
-	_G.render											= require("modules.render")
-	_G.input											= require("modules.input")
+	vec2d, vec3d, vec4d = loadmodule("vector")
+	mesh = loadmodule("vertexmesh")
 
-	_G.vec2d, _G.vec3d, _G.vec4d 	= require("modules.vector")
-	_G.mesh												= require("modules.vertexmesh")
+	gl = loadlib("opengl")
+	glfw = loadlib("glfw")
 
-	_G.gl													= require("libraries.opengl")
-	_G.glfw												= require("libraries.glfw")
-
-	_G.window 										= require("graphics.window")
-	_G.shader 										= require("graphics.shader")
+	window = include("graphics/window.lua")
+	shader = include("graphics/shader.lua")
 
 	glfw.glfwInit()
 	primaryWindow = window()
