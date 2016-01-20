@@ -1,3 +1,4 @@
+local ffi = require("ffi")
 local bit = require("bit")
 
 local window = {}

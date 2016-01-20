@@ -1,3 +1,5 @@
+local ffi = require("ffi")
+
 local vertexmesh = {}
 
 function vertexmesh:__gc()
