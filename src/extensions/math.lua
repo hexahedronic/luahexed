@@ -9,16 +9,14 @@ function math.binToInt(bin)
 end
 
 function math.intToBin(int)
-
 	local str = string.format("%o",int)
 
 	local a = {
-			["0"]="000",["1"]="001", ["2"]="010",["3"]="011",
-        	["4"]="100",["5"]="101", ["6"]="110",["7"]="111"
-		  }
+		["0"]="000",["1"]="001", ["2"]="010",["3"]="011",
+   	["4"]="100",["5"]="101", ["6"]="110",["7"]="111"
+	}
 	local bin = string.gsub(str, "(.)", function (d) return a[d] end)
 	return bin
-
 end
 
 function math.clamp(a, b, c)
@@ -47,8 +45,7 @@ function math.normalizeAngle(a)
 	return (a + 180) % 360 - 180
 end
 
-function math.AngleDifference(a, b)
-
+function math.angleDifference(a, b)
 	local diff = math.normalizeAngle(a - b)
 
 	if diff < 180 then
@@ -56,7 +53,6 @@ function math.AngleDifference(a, b)
 	end
 
 	return diff - 360
-
 end
 
 function math.approachAngle(cur, target, inc)
@@ -64,8 +60,8 @@ function math.approachAngle(cur, target, inc)
 	return math.approach(cur, cur + diff, inc)
 end
 
-function math.timeFraction(Start, End, Current)
-	return (Current - Start) / (End - Start)
+function math.timeFraction(startTime, endTime, current)
+	return (current - startTime) / (endTime - startTime)
 end
 
 function math.remap(value, inMin, inMax, outMin, outMax)
