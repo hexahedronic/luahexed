@@ -104,14 +104,13 @@ function string.comma(nu, s)
 end
 
 function string.niceSize(s)
-
 	s = tonumber(s)
 
-	if not s then return end
+	if not s then return s end
 
 	if s <= 0 then return "0 bytes" end
 	if s < 1024 then return s .. " bytes" end
-	if s < 1024^2 then return math.round(s / 1024, 2) .. " KiB" end
+	if s < 1024^2 then return math.round(s / 1024^1, 2) .. " KiB" end
 	if s < 1024^3 then return math.round(s / 1024^2, 2) .. " MiB" end
 	if s < 1024^4 then return math.round(s / 1024^3, 2) .. " GiB" end
 	if s < 1024^5 then return math.round(s / 1024^4, 2) .. " TiB" end
@@ -121,7 +120,6 @@ function string.niceSize(s)
 	if s < 1024^9 then return math.round(s / 1024^8, 2) .. " YiB" end
 
 	return "too much data for HDDs to handle"
-
 end
 
 function string.toTable(s)
@@ -195,4 +193,28 @@ end
 function string.trimleft(s, char)
 	char = char or "%s"
 	return s:match("^" .. char .. "*(.+)") or s
+end
+
+function string.fullwidth(str)
+	-- todo: automatic conversion of punctation?
+	str = str:gsub("%.","\239\189\161")
+	str = str:gsub("%!", "\239\188\129")
+	str = str:gsub("%?", "\239\188\159")
+	str = str:gsub("%:", "\239\188\154")
+	str = str:gsub("%;", "\239\188\155")
+	str = str:gsub("%<", "\239\188\156")
+	str = str:gsub("%>", "\239\188\158")
+	str = str:gsub("%/", "\239\188\143")
+	str = str:gsub("%\\", "\239\188\188")
+	str = str:gsub("%=", "\239\188\157")
+	str = str:gsub("%+", "\239\188\139")
+	str = str:gsub("%-", "\239\188\141")
+	str = str:gsub("%@", "\239\188\160")
+	str = str:gsub("%£", "\239\191\161")
+	-- upper and lower to full width
+	str = str:gsub("%l", function(c) return string.char(239, 189, 130 + (c:byte() - 98)) end)
+	str = str:gsub("%u", function(c) return string.char(239, 188, 161 + (c:byte() - 65)) end)
+	-- numbers
+	str = str:gsub("%d", function(c) return string.char(239, 188, 145 + (c:byte() - 49)) end)
+	return str
 end
