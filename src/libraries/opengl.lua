@@ -2070,13 +2070,14 @@ else
 	cdecl = cdecl:gsub("APIENTRY", "")
 end
 
+local uint = ffi.typeof("unsigned int")
 local function enumToConst(name, value)
 	if gl.e[name] then return end
 	local num = tonumber(value)
 	if not num then
 		print("OpenGL -> Enum with fucking weird number;\n\t", name, " -> ", value)
 	return "" end
-	gl.e[name] = num
+	gl.e[name] = uint(num)
 	return ""
 end
 cdecl = cdecl:gsub("#define GL_(%S+)%s+(%S+)\n", enumToConst)

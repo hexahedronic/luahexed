@@ -19,12 +19,26 @@ function window:__ctor(width, height, title, version, fullscreen, vsync, version
 	self.fullscreen	= fullscreen or false
 	self.vsync			= vsync or false
 
-	self.preferedVersion 		= version
-	self.acceptableVersions	= versionFallbacks
+	self.preferedVersion 		= version or 4.4
+	self.acceptableVersions	= versionFallbacks or {4.3, 4.2, 4.1, 4.0}
+
+	self:createContext()
+end
+
+function window:render(dtTime)
+	if self:shouldClose() then
+		self:__gc()
+	else
+		self:pollEvents()
+		self:swapBuffers()
+	end
 end
 
 function window:update()
-	glfw.glfwSetWindowTitle(self.title .. " | " .. self:getContextVersionString() .. " | fps goes here")
+	if not self.context then
+		error("Window -> Calling update pre-context!")
+	end
+	glfw.glfwSetWindowTitle(self.context, self.title .. " | " .. self:getContextVersionString() .. " | fps goes here")
 end
 
 function window:getContextVersionString()
@@ -47,9 +61,9 @@ function window:contextMatchVersion(ver)
 	glfw.glfwWindowHint(glfw.CONTEXT_VERSION_MINOR, minor)
 
 	if self.fullscreen then
-		return glfw.glfwCreateWindow(self.width, self.height, self.title, glfw.glfwGetPrimaryMonitor()), version
+		return glfw.glfwCreateWindow(self.width, self.height, self.title, glfw.glfwGetPrimaryMonitor(), nil), version
 	else
-		return glfw.glfwCreateWindow(self.width, self.height, self.title), version
+		return glfw.glfwCreateWindow(self.width, self.height, self.title, nil, nil), version
 	end
 end
 
@@ -170,17 +184,6 @@ function window:destroy()
 end
 window.close 			= window.destroy
 window.terminate	= window.destroy
-
-function window:tick()
-	if self:shouldClose() then
-		self:__gc()
-	else
-		self:pollEvents()
-		self:update()
-		self:draw()
-		self:swapBuffers()
-	end
-end
 
 object.register("window", window)
 
