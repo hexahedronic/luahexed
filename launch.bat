@@ -1,9 +1,7 @@
 @echo off
-
-REM This is a launch file.
-REM OKAY?
-
 title LuaHexed
+
+chcp 65001
 
 if not exist "bin/luajit.exe" goto NOBIN
 
