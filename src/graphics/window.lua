@@ -1,7 +1,32 @@
+local bit = require("bit")
+
 local window = {}
+local windows = {}
+
+function window.getWindows()
+	return next, windows
+end
+
+function window.closeWindows()
+	for id, win in window.getWindows() do
+		win:close()
+	end
+end
 
 function window:__gc()
-	glfw.glfwDestroyWindow(self.context)
+	if self.context then
+		glfw.glfwDestroyWindow(self.context)
+		self.context = nil
+	end
+	self.valid = false
+end
+
+function window:close()
+	self:__gc()
+end
+
+function window:isValid()
+	return self.valid
 end
 
 function window:__ctor(width, height, title, version, fullscreen, vsync, versionFallbacks)
@@ -19,18 +44,29 @@ function window:__ctor(width, height, title, version, fullscreen, vsync, version
 	self.fullscreen	= fullscreen or false
 	self.vsync			= vsync or false
 
-	self.preferedVersion 		= version or 4.4
-	self.acceptableVersions	= versionFallbacks or {4.3, 4.2, 4.1, 4.0}
+	self.dtTime			= 0
 
-	self:createContext()
+	self.preferedVersion 		= version or 4.4
+	self.acceptableVersions	= versionFallbacks or {4.0, 2.1, 1.1, 1.0}
+
+	local pass = self:createContext()
+	if not pass then return end
+
+	windows[#windows+1] = self
 end
 
 function window:render(dtTime)
+	assertType(dtTime, "number")
+
 	if self:shouldClose() then
-		self:__gc()
+		self:close()
 	else
+		self:clear()
+			event.call("render", self)
 		self:pollEvents()
 		self:swapBuffers()
+
+		self.dtTime = dtTime
 	end
 end
 
@@ -38,7 +74,12 @@ function window:update()
 	if not self.context then
 		error("Window -> Calling update pre-context!")
 	end
-	glfw.glfwSetWindowTitle(self.context, self.title .. " | " .. self:getContextVersionString() .. " | fps goes here")
+	glfw.glfwSetWindowTitle(self.context, self.title .. " | " .. self:getContextVersionString() .. " | " .. self:getFPS() .. " fps")
+end
+
+function window:getFPS()
+	if self.dtTime <= 0 then return 0 end
+	return 1 / self.dtTime
 end
 
 function window:getContextVersionString()
@@ -72,7 +113,6 @@ function window:createContext()
 	if self.preferedVersion then
 		context, ver = self:contextMatchVersion()
 	end
-
 	if not context and self.acceptableVersions then
 		for i = 1, #self.acceptableVersions do
 			context, ver = self:contextMatchVersion(self.acceptableVersions[i])
@@ -82,7 +122,8 @@ function window:createContext()
 
 	if not context then
 		print("Window -> Failed to create context.")
-	return end
+	return false end
+	self.valid = true
 
 	glfw.glfwMakeContextCurrent(context)
 	if self.vsync then
@@ -90,9 +131,19 @@ function window:createContext()
 	else
 		glfw.glfwSwapInterval(0)
 	end
+	self:setMask(bit.bor(gl.e.COLOR_BUFFER_BIT, gl.e.DEPTH_BUFFER_BIT))
 
 	self.context = context
 	self:update()
+	return true
+end
+
+function window:setMask(mask)
+	self.mask = mask
+end
+
+function window:clear()
+	gl.glClear(self.mask)
 end
 
 function window:enableFeature(feature)
@@ -175,15 +226,9 @@ function window:setVSync(vsync)
 	end
 end
 
-function window:onFocus()
+function window:focus()
 	glfw.glfwMakeContextCurrent(self.context)
 end
-
-function window:destroy()
-	self:__gc()
-end
-window.close 			= window.destroy
-window.terminate	= window.destroy
 
 object.register("window", window)
 

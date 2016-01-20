@@ -151,9 +151,11 @@ do
 	--require("tests.graphicstest")
 
 	glfw.glfwInit()
-	event.call("init")
-		main()
-	event.call("shutdown")
+	primaryWindow = window()
+		event.call("init")
+			main()
+		event.call("shutdown")
+	window.destroyWindows()
 	glfw.glfwTerminate()
 end
 
