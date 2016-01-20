@@ -4,6 +4,11 @@ local bit = require("bit")
 local window = {}
 local windows = {}
 
+function window.getCurrentWindow()
+	-- too tired to look up how to do this for now
+	return primaryWindow
+end
+
 function window.getWindows()
 	return next, windows
 end
@@ -19,7 +24,7 @@ function window:__gc()
 		glfw.glfwDestroyWindow(self.context)
 		self.context = nil
 	end
-	self.valid = false
+	self:setValid(false)
 end
 
 function window:close()
@@ -48,7 +53,7 @@ function window:__ctor(width, height, title, version, fullscreen, vsync, version
 	self.dtTime			= 0
 
 	self.preferedVersion 		= version or 4.4
-	self.acceptableVersions	= versionFallbacks or {4.0, 2.1, 1.1, 1.0}
+	self.acceptableVersions	= versionFallbacks or {4.0, 3.3, 2.1, 1.2}
 
 	local pass = self:createContext()
 	if not pass then return end
@@ -124,7 +129,7 @@ function window:createContext()
 	if not context then
 		print("Window -> Failed to create context.")
 	return false end
-	self.valid = true
+	self:setValid(true)
 
 	glfw.glfwMakeContextCurrent(context)
 	if self.vsync then
@@ -232,5 +237,6 @@ function window:focus()
 end
 
 object.register("window", window)
+object.isSet("window", "Valid", false)
 
 return window

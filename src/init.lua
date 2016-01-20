@@ -148,14 +148,18 @@ do
 	_G.glfw												= require("libraries.glfw")
 
 	_G.window 										= require("graphics.window")
-
-	--require("tests.graphicstest")
+	_G.shader 										= require("graphics.shader")
 
 	glfw.glfwInit()
 	primaryWindow = window()
+
+		--require("tests.graphicstest")
+		require("tests.shadertest")
+
 		event.call("init")
 			main()
 		event.call("shutdown")
+
 	window.destroyWindows()
 	glfw.glfwTerminate()
 end

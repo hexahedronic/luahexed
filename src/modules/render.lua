@@ -8,18 +8,19 @@ function render.addRenderEvent(obj, window)
 	-- when recieved call 'render' on obj as a metamethod.
 end
 
-function render.addShader(shaderType, glslCode)
-	local cString = ffi.new("const char*", glslCode)
-	local shader = gl.glCreateShader(shaderType)
-	gl.glShaderSource(shader, 1, cString, nil)
-	gl.glCompileShader(shader)
+function render.glHasVersion(version, window)
+	local major, minor = math.modf(version)
+	minor = math.floor(minor * 10)
 
-	local status = ffi.new("GLint[1]")
-	gl.glGetShaderiv(shader, gl.e.COMPILE_STATUS, status)
-	if status[0] ~= gl.e.TRUE then
-		error("OpenGL -> Error creating shader!")
-	end
-	return shader
+	local win = window or window.getCurrentWindow()
+	if not win:isValid() then return false end
+	local ma, mi, _ = win:contextVersion()
+
+	if ma < major then return false end
+	if ma > major then return true end
+
+	if mi < minor then return false end
+	return true
 end
 
 return render
