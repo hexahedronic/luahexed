@@ -4,6 +4,9 @@ if not require("ffi") then
 	error("LuaJIT/FFI module not found! luahexed requires FFI to run.")
 end
 
+-- Workaround until function is loaded
+function assertType() end
+
 do
 	if jit.os ~= "Windows" then
 		package.cpath = "./?.so"
@@ -113,13 +116,13 @@ do
 		makeLoader(function(name) name = name:gsub("%.", "/") return loadfile("../src/" .. name .. ".lua") end)
 		makeLoader(function(name) name = name:gsub("%.", "/") return loadfile("../src/" .. name .. "/init.lua") end)
 
-	--	ill set this up eventually
-	--	looks like its starting to happen
+		-- ill set this up eventually
+		-- looks like its starting to happen
 		local fs = require("modules.fs")
 
-		E.BIN_FOLDER = fs.getcd():gsub("\\", "/") .. "/"
+		E.BIN_FOLDER 	= fs.getcd():gsub("\\", "/") .. "/"
 		E.ROOT_FOLDER = E.BIN_FOLDER:match("(.+/)(.-/)")
-		E.SRC_FOLDER = E.ROOT_FOLDER .. "src/"
+		E.SRC_FOLDER 	= E.ROOT_FOLDER .. "src/"
 		E.DATA_FOLDER = E.ROOT_FOLDER .. "data/"
 
 		-- When VFS is done, move the loading below and only use require to load vfs
@@ -127,35 +130,32 @@ do
 	end
 end
 
-function assertType() end -- workaround
-object = require("modules.object") -- vfs requires object
-vfs = require("modules.vfs")
-require("extensions.global")
+object 	= require("modules.object") -- vfs requires object
+vfs 		= require("modules.vfs")
 
+require("extensions.global")
 loadextension("math")
 loadextension("string")
 
 do
 	local main = include("main_loop.lua")
 
-	util = loadmodule("util")
+	util 		= loadmodule("util")
+	event 	= loadmodule("event")
+	render 	= loadmodule("render")
+	input 	= loadmodule("input")
 
-	event = loadmodule("event")
+	vec2, vec3, vec4 = loadmodule("vector")
+	mesh 		= loadmodule("vertexmesh")
 
-	render = loadmodule("render")
-	input = loadmodule("input")
+	gl 			= loadlib("opengl")
+	glfw 		= loadlib("glfw")
 
-	vec2d, vec3d, vec4d = loadmodule("vector")
-	mesh = loadmodule("vertexmesh")
-
-	gl = loadlib("opengl")
-	glfw = loadlib("glfw")
-
-	window = include("graphics/window.lua")
-	shader = include("graphics/shader.lua")
+	window 	= include("graphics/window.lua")
+	shader 	= include("graphics/shader.lua")
 
 	glfw.glfwInit()
-	primaryWindow = window()
+	primaryWindow = window() -- improving later
 
 		--require("tests.graphicstest")
 		require("tests.shadertest")
