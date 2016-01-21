@@ -23,4 +23,54 @@ function render.glHasVersion(version, window)
 	return true
 end
 
+function render.setPrimaryWindow(win)
+	render.primaryWindow = win
+end
+
+function render.getPrimaryWindow()
+	return render.primaryWindow
+end
+
+function render.getWindow()
+	return window.current
+end
+
+function render.setWindow(win)
+	win:onFocus()
+end
+
+function render.getWindows()
+	return next, window.windows
+end
+
+function render.closeAllWindows()
+	for id, win in render.getWindows() do
+		win:close()
+	end
+end
+
+function render.set3D(enabled)
+	if enabled then
+		gl.glEnable(gl.e.DEPTH_TEST)
+		gl.glDepthMask(1)
+		gl.glDepthFunc(gl.e.LESS)
+	else
+		gl.Disable(gl.e.DEPTH_TEST)
+		gl.DepthMask(0)
+	end
+end
+
+-- draw 2d after i think?
+function render.call()
+	render.set3D(true)
+	event.call("pre_draw3D")
+	event.Call("draw3D", game.dtTime)
+	event.call("post_draw3D")
+
+	render.set3D(false)
+	event.call("pre_draw2D")
+	event.Call("draw2D", game.dtTime)
+	event.call("post_draw2D")
+end
+
 return render

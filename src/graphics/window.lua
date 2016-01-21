@@ -1,29 +1,14 @@
 local ffi = require("ffi")
 local bit = require("bit")
 
-local window = {}
-local windows = {}
-
-function window.getCurrentWindow()
-	-- too tired to look up how to do this for now
-	return primaryWindow
-end
-
-function window.getWindows()
-	return next, windows
-end
-
-function window.closeWindows()
-	for id, win in window.getWindows() do
-		win:close()
-	end
-end
+local window = {windows = {}}
 
 function window:__gc()
 	if self.context then
 		glfw.glfwDestroyWindow(self.context)
 		self.context = nil
 	end
+	window.windows[self.id] = nil
 	self:setValid(false)
 end
 
@@ -58,7 +43,9 @@ function window:__ctor(width, height, title, version, fullscreen, vsync, version
 	local pass = self:createContext()
 	if not pass then return end
 
-	windows[#windows+1] = self
+	local id = #window.windows+1
+	window.windows[id] = self
+	self.id = id
 end
 
 function window:render(dtTime)
@@ -152,18 +139,6 @@ function window:clear()
 	gl.glClear(self.mask)
 end
 
-function window:enableFeature(feature)
-	gl.glEnable(feature)
-end
-
-function window:disableFeature(feature)
-	gl.glDisable(feature)
-end
-
-function window:setDepthFunc(name)
-	gl.glDepthFunc(name)
-end
-
 function window:getFramebufferSize()
 	local size = ffi.new("int[2]")
 	glfw.glfwGetFramebufferSize(self.context, size, size + 1)
@@ -232,8 +207,9 @@ function window:setVSync(vsync)
 	end
 end
 
-function window:focus()
+function window:onFocus()
 	glfw.glfwMakeContextCurrent(self.context)
+	window.current = self
 end
 
 object.register("window", window)

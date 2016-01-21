@@ -1,11 +1,12 @@
-local function startRendering(game)
+local function startRendering(tickThread)
 	local lastTime = 0
 	while true do
-		local time = glfw.glfwGetTime()
+		local time = game.curTime()
 		local dtTime = time - lastTime
-		coroutine.resume(game, time)
+		game.dtTime = dtTime
+		coroutine.resume(tickThread, time)
 
-		for id, win in window.getWindows() do
+		for id, win in render.getWindows() do
 			if win:isValid() then win:render(dtTime) end
 		end
 
@@ -14,14 +15,14 @@ local function startRendering(game)
 end
 
 local function startTickRate()
-	local game = coroutine.create(function(time)
+	return coroutine.create(function(time)
 		while true do
 			event.call("tick")
-			for id, win in window.getWindows() do
+			for id, win in render.getWindows() do
 				if win:isValid() then win:update() end
 			end
 
-			local time = glfw.glfwGetTime()
+			local time = game.curTime()
 			local endTime = time + (1 / 33) -- tickrate
 			while true do
 				if endTime < time then break end
@@ -29,12 +30,11 @@ local function startTickRate()
 			end
 		end
 	end)
-	return game
 end
 
 local function main()
-	local game = startTickRate()
-	startRendering(game)
+	local tickThread = startTickRate()
+	startRendering(tickThread)
 end
 
 return main

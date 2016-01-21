@@ -144,6 +144,7 @@ do
 	event 	= loadmodule("event")
 	render 	= loadmodule("render")
 	input 	= loadmodule("input")
+	game		= loadmodule("game")
 
 	vec2, vec3, vec4 = loadmodule("vector")
 	mesh 		= loadmodule("vertexmesh")
@@ -155,7 +156,7 @@ do
 	shader 	= include("graphics/shader.lua")
 
 	glfw.glfwInit()
-	primaryWindow = window() -- improving later
+	render.setPrimaryWindow(window())
 
 		--require("tests.graphicstest")
 		require("tests.shadertest")
@@ -164,7 +165,7 @@ do
 			main()
 		event.call("shutdown")
 
-	window.destroyWindows()
+	render.destroyAllWindows()
 	glfw.glfwTerminate()
 end
 
