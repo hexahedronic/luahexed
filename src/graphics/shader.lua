@@ -53,12 +53,12 @@ function shader:linkProgram()
 	gl.glLinkProgram(self.program)
 
 	local status = ffi.new("GLint[1]")
-	gl.glGetShaderiv(self.program, gl.e.LINK_STATUS, status)
+	gl.glGetProgramiv(self.program, gl.e.LINK_STATUS, status)
 	if status[0] ~= gl.e.TRUE then
 		print("OpenGL -> Error linking shader programme!")
 
 		local buffer = ffi.new("char[512]")
-		gl.glGetShaderInfoLog(self.program, 512, nil, buffer)
+		gl.glGetProgramInfoLog(self.program, 512, nil, buffer)
 		error(ffi.string(buffer))
 	end
 	self:setValid(true)
