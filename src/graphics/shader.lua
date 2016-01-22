@@ -41,7 +41,7 @@ function shader:attachGLSL(shaderType, glslCode)
 
 		local buffer = ffi.new("char[512]")
 		gl.glGetShaderInfoLog(self.program, 512, nil, buffer)
-		print("\t" .. ffi.string(buffer))
+		error(ffi.string(buffer))
 	end
 	self.shaders[shaderType] = shade
 end
@@ -59,9 +59,13 @@ function shader:linkProgram()
 
 		local buffer = ffi.new("char[512]")
 		gl.glGetShaderInfoLog(self.program, 512, nil, buffer)
-		print("\t" .. ffi.string(buffer))
+		error(ffi.string(buffer))
 	end
 	self:setValid(true)
+end
+
+function shader:getShaders()
+	return self.shaders
 end
 
 object.register("shader", shader)
