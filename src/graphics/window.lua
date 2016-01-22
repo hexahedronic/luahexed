@@ -55,7 +55,7 @@ function window:render(dtTime)
 		self:close()
 	else
 		self:clear()
-			event.call("render", self, dtTime)
+			render.call(self)
 		self:pollEvents()
 		self:swapBuffers()
 
