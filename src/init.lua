@@ -158,8 +158,8 @@ do
 	glfw.glfwInit()
 	render.setPrimaryWindow(window())
 
-		--require("tests.graphicstest")
-		require("tests.shadertest")
+		require("tests.graphicstest")
+		--require("tests.shadertest")
 
 		event.call("init")
 			main()
