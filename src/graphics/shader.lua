@@ -10,10 +10,18 @@ function shader.use(name)
 	gl.glUseProgram(shaders[name].program)
 end
 
+function shader.destroyAll()
+	for name, shade in pairs(shaders) do
+		if shade:isValid() then shader:__gc() end
+	end
+end
+
 function shader:__ctor(name)
+	assertType(name, "string")
+
 	self.program = gl.glCreateProgram()
 	self.shaders = {}
-	self.linked = false
+	self.name = name
 
 	if shaders[name] then
 		error("OpenGL -> Attempt to re-define a shader!")
@@ -22,10 +30,16 @@ function shader:__ctor(name)
 end
 
 function shader:__gc()
+	self:setValid(false)
 	if self.program then
 		gl.glDeleteProgram(self.program)
 	end
-	self:setValid(false)
+	if self.shaders then
+		for shaderType, shade in pairs(self.shaders) do
+			gl.glDeleteShader(shade)
+		end
+	end
+	shaders[self.name] = nil
 end
 
 function shader:attachGLSL(shaderType, glslCode)
@@ -41,6 +55,8 @@ function shader:attachGLSL(shaderType, glslCode)
 
 		local buffer = ffi.new("char[512]")
 		gl.glGetShaderInfoLog(shade, 512, nil, buffer)
+
+		self:__gc()
 		error(ffi.string(buffer))
 	end
 	self.shaders[shaderType] = shade
@@ -59,6 +75,8 @@ function shader:linkProgram()
 
 		local buffer = ffi.new("char[512]")
 		gl.glGetProgramInfoLog(self.program, 512, nil, buffer)
+
+		self:__gc()
 		error(ffi.string(buffer))
 	end
 	self:setValid(true)

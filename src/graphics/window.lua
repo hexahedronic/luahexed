@@ -4,12 +4,11 @@ local bit = require("bit")
 local window = {windows = {}}
 
 function window:__gc()
+	self:setValid(false)
 	if self.context then
 		glfw.glfwDestroyWindow(self.context)
-		self.context = nil
 	end
 	window.windows[self.id] = nil
-	self:setValid(false)
 end
 
 function window:close()

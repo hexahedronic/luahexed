@@ -165,7 +165,8 @@ do
 			main()
 		event.call("shutdown")
 
-	render.destroyAllWindows()
+	render.closeAllWindows()
+	shader.destroyAll()
 	glfw.glfwTerminate()
 end
 
