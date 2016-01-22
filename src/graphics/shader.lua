@@ -40,7 +40,7 @@ function shader:attachGLSL(shaderType, glslCode)
 		print("OpenGL -> Error creating shader!")
 
 		local buffer = ffi.new("char[512]")
-		gl.glGetShaderInfoLog(self.program, 512, nil, buffer)
+		gl.glGetShaderInfoLog(shade, 512, nil, buffer)
 		error(ffi.string(buffer))
 	end
 	self.shaders[shaderType] = shade
