@@ -6,21 +6,23 @@ local triangle = mesh({
 
 local testVertex = [[
 #version 150
-void main(void)
-{
-	vec4 a = gl_Vertex;
-	a.x = a.x * 0.5;
-	a.y = a.y * 0.5;
 
-	gl_Position = gl_ModelViewProjectionMatrix * a;
+in vec2 position;
+
+void main()
+{
+    gl_Position = vec4(position, 0.0, 1.0);
 }
 ]]
 
 local testFrag = [[
 #version 150
-void main (void)
+
+out vec4 outColor;
+
+void main()
 {
-	gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
+    outColor = vec4(1.0, 1.0, 1.0, 1.0);
 }
 ]]
 
