@@ -1,13 +1,5 @@
 local render = {}
 
-function render.addRenderEvent(obj, window)
-	-- not tonight, but tommorow probably
-	-- adding a renderhook should asign listen for
-	-- 'render' from the window that was active when
-	-- called, or the supplied argument
-	-- when recieved call 'render' on obj as a metamethod.
-end
-
 function render.glHasVersion(version, window)
 	local major, minor = math.modf(version)
 	minor = math.floor(minor * 10)
@@ -55,22 +47,20 @@ function render.set3D(enabled)
 		gl.glDepthMask(1)
 		gl.glDepthFunc(gl.e.LESS)
 	else
-		gl.Disable(gl.e.DEPTH_TEST)
-		gl.DepthMask(0)
+		gl.glDisable(gl.e.DEPTH_TEST)
+		gl.glDepthMask(0)
 	end
 end
 
--- draw 2d after i think?
-function render.call()
+function render.call(window)
 	render.set3D(true)
-	event.call("pre_draw3D")
-	event.Call("draw3D", game.dtTime)
-	event.call("post_draw3D")
-
+		event.call("pre_render3D")
+			event.call("render3D", game.dtTime)
+		event.call("post_draw3D")
 	render.set3D(false)
-	event.call("pre_draw2D")
-	event.Call("draw2D", game.dtTime)
-	event.call("post_draw2D")
+		event.call("pre_render2D")
+			event.call("render2D", game.dtTime)
+		event.call("post_render2D")
 end
 
 return render
