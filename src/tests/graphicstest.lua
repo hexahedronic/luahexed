@@ -1,39 +1,37 @@
-local w,h = render.getSize()
+local triangle = mesh({
+	 0.0,  0.5,
+	 0.5, -0.5,
+	-0.5, -0.5,
+})
 
-graphics.glu.gluPerspective(60, w/h, 0.01, 1000) -- fov, aspect, nearclip, farclip
+local testVertex = [[
+#version 150
+void main(void)
+{
+	vec4 a = gl_Vertex;
+	a.x = a.x * 0.5;
+	a.y = a.y * 0.5;
 
---graphics.gl.glMatrixMode(graphics.glc.GL_PROJECTION) -- different matrixes, not quite sure
--- setting it twice does nothing, unless i am genuinely retarded?
-graphics.gl.glMatrixMode(graphics.glc.GL_MODELVIEW) -- different matrixes, not quite sure
+	gl_Position = gl_ModelViewProjectionMatrix * a;
+}
+]]
 
-graphics.glu.gluLookAt(0,10,20, -- eye offset
-	0,0,0, -- origin
-	0,1,-1) -- up vector, like in gmod-
+local testFrag = [[
+#version 150
+void main (void)
+{
+	gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
+}
+]]
 
-local rotx, roty, rotz = 0, 0, 100
-local boxx, boxy, boxz = -0.5,-0.5,2
+local shade = shader("test_shader")
+	shade:attachGLSL(gl.e.VERTEX_SHADER, testVertex)
+	shade:attachGLSL(gl.e.FRAGMENT_SHADER, testFrag)
+shade:linkProgram() -- fails to link, error message is blank?
 
-event.listen("render3D", "test", function()
-	--print(input.cursorPos(), render.getFPS())
-	local time = render.curTime()
+util.printTable(shade:getShaders())
 
-	graphics.gl.glTranslated(boxx, boxy, boxz)
-	graphics.gl.glRotated(0LL, rotx, roty, rotz)
-
-	graphics.gl.glColor3d(0.5, 1, 0.5)
-	render.drawQuad(vec3d(-100, 0, -100), vec3d(100, 0, -100), vec3d(100, 0, 100), vec3d(-100, 0, 100), vec3d(0, 1, 0))
-
-	graphics.gl.glRotated(time^2, rotx, roty, rotz)
-	graphics.gl.glTranslated(boxx, boxy, boxz - time)
-
-	render.drawCube(1, 1, 1, function(f)
-		graphics.gl.glColor3d(1, 1 / f, 1 / f)
-	end)
-
-	graphics.gl.glTranslated(boxx + 10, boxy, boxz - graphics.lq_glfw.getTime())
-	graphics.gl.glRotated(graphics.lq_glfw.getTime()^2, rotx, roty, rotz)
-
-	render.drawCube(2, 2, 2, function(f)
-		graphics.gl.glColor3d(1, 1 / f, 1 / f)
-	end)
+event.listen("render2D", "test", function(dtTime)
+	shader.use("test_shader")
+	triangle:render()
 end)
