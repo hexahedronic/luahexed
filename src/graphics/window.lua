@@ -53,10 +53,10 @@ function window:render(dtTime)
 	if self:shouldClose() then
 		self:close()
 	else
-		self:clear()
-			render.call(self)
 		self:pollEvents()
 		self:swapBuffers()
+		self:clear()
+		render.call(self)
 
 		self.dtTime = dtTime
 	end

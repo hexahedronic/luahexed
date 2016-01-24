@@ -2,7 +2,7 @@ local triangle = mesh({
 	 0.0,  0.5,
 	 0.5, -0.5,
 	-0.5, -0.5,
-})
+}) -- single triangle, no point in using elements for now
 
 local testVertex = [[
 #version 150
@@ -29,11 +29,17 @@ void main()
 local shade = shader("test_shader")
 	shade:attachGLSL(gl.e.VERTEX_SHADER, testVertex)
 	shade:attachGLSL(gl.e.FRAGMENT_SHADER, testFrag)
-shade:linkProgram() -- fails to link, error message is blank?
+	shade:bindFrag(0, "outColor")
+shade:linkProgram()
 
-util.printTable(shade:getShaders())
+shader.use("test_shader")
+
+local posAttrib = shade:getAttribute("position")
+shade:vertexAttrib(posAttrib, 2, 5, 0)
+
+local colAttrib = shade:getAttribute("color")
+shade:vertexAttrib(colAttrib, 3, 5, 2)
 
 event.listen("render2D", "test", function(dtTime)
-	shader.use("test_shader")
 	triangle:render()
 end)

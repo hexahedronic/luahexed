@@ -62,6 +62,28 @@ function shader:attachGLSL(shaderType, glslCode)
 	self.shaders[shaderType] = shade
 end
 
+function shader:bindFrag(position, name)
+	gl.glBindFragDataLocation(self.program, position, name)
+end
+
+
+function shader:addAttribute(position, name)
+	gl.glBindAttribLocation(self.program, position, name)
+end
+
+function shader:getAttribute(name)
+	return gl.glGetAttribLocation(self.program, name)
+end
+
+local floatSize = ffi.sizeof("float")
+function shader:vertexAttrib(position, count, stride, size)
+	local glStride = stride * floatSize
+	local glSize = ffi.cast("void*", size * floatSize)
+
+	gl.VertexAttribPointer(position, count, gl.e.FLOAT, gl.e.FALSE, glStride, glSize)
+	gl.EnableVertexAttribArray(position)
+end
+
 function shader:linkProgram()
 	for shaderType, shade in pairs(self.shaders) do
 		gl.glAttachShader(self.program, shade)
